@@ -14,6 +14,7 @@ class Well{
         Well(double maxvol);
         int changeVol(double amt);
         bool canChange(double amt);
+        std::string toString(){return (volume == 0) ? "Empty!" : std::to_string(volume) + "uL of " + compound + " at " + std::to_string(concentration) + "uM";}
 };
 #endif
 
@@ -25,10 +26,12 @@ class Plate{
         int timesopened;
         std::vector<std::vector<Well>> wells;
     public:
+        std::vector<std::vector<Well>> getWells() {return wells;}
+
         Plate(int r, int c, double mv);
         std::string changeWellContents(int r, int c, double vol);
         std::string changeWellContents(int r, int c, double vol, double conc, std::string compound);
-        std::vector<std::pair<Well, std::tuple<int, int, double>>> compoundExists(std::string compound, double conc);
-        std::vector<std::pair<Well, std::tuple<int, int, double>>> compoundExists(std::string compound);
+        std::vector<std::pair<Well, std::pair<int, int>>> compoundExists(std::string compound, double conc);
+        std::vector<std::pair<Well, std::pair<int, int>>> compoundExists(std::string compound);
 };
 #endif

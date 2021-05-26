@@ -51,19 +51,19 @@ std::string Plate::changeWellContents(int r, int c, double vol, double conc, std
     }
     throw(compound);
 }
-std::vector<std::pair<Well, std::tuple<int, int, double>>> Plate::compoundExists(std::string compound, double conc){
-    std::vector<std::pair<Well, std::tuple<int, int, double>>> matches;
+std::vector<std::pair<Well, std::pair<int, int>>> Plate::compoundExists(std::string compound, double conc){
+    std::vector<std::pair<Well, std::pair<int, int>>> matches;
     for (int row=0; row < wells.size(); row++){
         for (int col=0; col < wells[0].size(); col++){
-            if (conc == -1){
+            if (conc != -1){
                 if (wells[row][col].compound == compound && wells[row][col].concentration == conc){
-                    std::pair<Well, std::tuple<int,int, double>> tmp = {wells[row][col], {row, col, conc}};
+                    std::pair<Well, std::pair<int,int>> tmp = {wells[row][col], {row, col}};
                     matches.push_back(tmp);
                 }
             }
             else{
                 if (wells[row][col].compound == compound){
-                    std::pair<Well, std::tuple<int,int, double>> tmp = {wells[row][col], {row, col, conc}};
+                    std::pair<Well, std::pair<int,int>> tmp = {wells[row][col], {row, col}};
                     matches.push_back(tmp);
                 }
             }
@@ -71,6 +71,6 @@ std::vector<std::pair<Well, std::tuple<int, int, double>>> Plate::compoundExists
     }
     return matches;
 }
-std::vector<std::pair<Well, std::tuple<int, int, double>>> Plate::compoundExists(std::string compound){
+std::vector<std::pair<Well, std::pair<int, int>>> Plate::compoundExists(std::string compound){
     return compoundExists(compound, -1);
 }
