@@ -1,8 +1,9 @@
 #include "plate.h"
 #include <tuple>
 #include <vector>
-Plate::Plate(int r, int c, double mv){
+Plate::Plate(int r, int c, double mv, std::string n){
     maxvol = mv;
+    name = n;
     timesopened = 0;
     for (int i=0; i < r; i++){
         std::vector<Well> tmp (c, Well(mv));

@@ -24,11 +24,13 @@ class Plate{
     private:
         double maxvol;
         int timesopened;
+        std::string name;
         std::vector<std::vector<Well>> wells;
     public:
         std::vector<std::vector<Well>> getWells() {return wells;}
+        std::string getName() {return name;}
 
-        Plate(int r, int c, double mv);
+        Plate(int r, int c, double mv, std::string name);
         std::string changeWellContents(int r, int c, double vol);
         std::string changeWellContents(int r, int c, double vol, double conc, std::string compound);
         std::vector<std::pair<Well, std::pair<int, int>>> compoundExists(std::string compound, double conc);
