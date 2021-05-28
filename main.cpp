@@ -4,7 +4,6 @@
 #include<fstream>
 #include<bits/stdc++.h>
 
-
 std::vector<std::pair<std::string, std::vector<std::pair<Well, std::pair<int, int>>>>> find(std::vector<Plate> plates, std::string name, double conc){
     if (conc == -1)
         std::cout << "searching for any concentration of " << name << std::endl;
@@ -44,7 +43,7 @@ Plate read_csv(std::string filename){
     fin.open(filename, std::ios::in);
     std::string line, word, temp;
     std::vector<std::vector<std::pair<std::string, std::pair<double, double>>>> platevals;
-    int nrows = 0;
+    int nrows = 1;
     int ncols = 0;
     while (fin >> temp){
         std::vector<std::string> compounds = {};
@@ -82,7 +81,7 @@ Plate read_csv(std::string filename){
     std::cout << "nrows:" << nrows << " ncols:" << ncols << std::endl;
     size_t lastindex = filename.find_last_of(".");
     std::string platename = filename.substr(0, lastindex); // strip off .csv or whatever extension
-    Plate finalplate = Plate(nrows, ncols, 20, filename);
+    Plate finalplate = Plate(nrows, ncols, 20, platename);
     for(int i=0; i < platevals.size(); i++)
         for(int j=0; j <platevals[0].size(); j++)
             finalplate.changeWellContents(i,j, platevals[i][j].second.second, platevals[i][j].second.first, platevals[i][j].first);
@@ -93,7 +92,7 @@ Plate read_csv(std::string filename){
 
 int main(){
 
-    Plate pp = Plate(12,16,20.0, "Elam's_plate");
+    Plate pp = Plate(12,16,20.0, "Elam");
     Plate dd = Plate(12,16,20.0, "Doug's plate");
     std::vector<std::vector<Well>> tmp = pp.getWells();
     pp.changeWellContents(10,1, 10, .1, "abc");
@@ -103,11 +102,10 @@ int main(){
     /* std::cout << pp.changeWellContents(10,15, 10, .1, "abc") << std::endl; */
     /* std::cout << pp.getWells()[0][0].toString() << std::endl; */
 
-    Plate p = read_csv("test.csv");
-    auto col = {pp,dd,p};
-    auto b = find(col, "abc", .1);
     pp.save();
+    Plate b = read_csv(pp.getName() + ".csv");
+    auto col = {b};
+    std::cout << "read plate name" << b.getName() << std::endl;
+    auto a = find(col, "abc", .1);
 
-
-    std::cout << b.size() <<  " "  << std::endl;
 }
