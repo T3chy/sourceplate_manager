@@ -33,6 +33,22 @@ int Well::changeVol(double vol){
     return -1;
 }
 
+std::string Plate::toString (){
+    std::string tmp = "";
+    for (int i=0; i < wells.size(); i++) {
+        std::string names = "";
+        std::string concs = "";
+        std::string vols = "";
+        for (int j=0; j < wells[0].size(); j++){
+            names += wells[i][j].compound + ",";
+            concs += std::to_string(wells[i][j].concentration) + ",";
+            vols += std::to_string(wells[i][j].volume) + ",";
+        }
+        tmp += "compound, " + names + "\n" + "concentration (uM), " + concs + "\n" + "volume (uL), " + vols + "\n";
+
+    }
+    return tmp;
+}
 std::string Plate::changeWellContents(int r, int c, double vol){
     if (wells[r][c].changeVol(vol) == -1)
             throw(vol);
