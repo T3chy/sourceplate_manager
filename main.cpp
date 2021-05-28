@@ -93,7 +93,7 @@ Plate read_csv(std::string filename){
 
 int main(){
 
-    Plate pp = Plate(12,16,20.0, "Elam's plate");
+    Plate pp = Plate(12,16,20.0, "Elam's_plate");
     Plate dd = Plate(12,16,20.0, "Doug's plate");
     std::vector<std::vector<Well>> tmp = pp.getWells();
     pp.changeWellContents(10,1, 10, .1, "abc");
@@ -106,6 +106,8 @@ int main(){
     Plate p = read_csv("test.csv");
     auto col = {pp,dd,p};
     auto b = find(col, "abc", .1);
+    pp.save();
+
 
     std::cout << b.size() <<  " "  << std::endl;
 }

@@ -1,6 +1,9 @@
 #include "plate.h"
 #include <tuple>
 #include <vector>
+#include <fstream>
+#include <string>
+#include <iostream>
 Plate::Plate(int r, int c, double mv, std::string n){
     maxvol = mv;
     name = n;
@@ -90,4 +93,10 @@ std::vector<std::pair<Well, std::pair<int, int>>> Plate::compoundExists(std::str
 }
 std::vector<std::pair<Well, std::pair<int, int>>> Plate::compoundExists(std::string compound){
     return compoundExists(compound, -1);
+}
+int Plate::save(){
+    std::ofstream out(name + ".csv");
+    out << this -> toString();
+    out.close();
+    return 0;
 }

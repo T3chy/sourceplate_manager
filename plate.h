@@ -30,6 +30,7 @@ class Plate{
         std::vector<std::vector<Well>> getWells() {return wells;}
         std::string getName() {return name;}
         std::string toString();
+        int save();
 
         Plate(int r, int c, double mv, std::string name);
         std::string changeWellContents(int r, int c, double vol);
