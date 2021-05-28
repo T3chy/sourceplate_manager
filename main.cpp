@@ -4,6 +4,10 @@
 #include<fstream>
 #include<bits/stdc++.h>
 
+std::string nums_to_coords(int r, int c){
+    char tmp = 'A' + (char)c;
+    return tmp + std::to_string(r);
+}
 std::vector<std::pair<std::string, std::vector<std::pair<Well, std::pair<int, int>>>>> find(std::vector<Plate> plates, std::string name, double conc){
     if (conc == -1)
         std::cout << "searching for any concentration of " << name << std::endl;
@@ -19,7 +23,7 @@ std::vector<std::pair<std::string, std::vector<std::pair<Well, std::pair<int, in
         if (tmp.size() > 0){
             std::cout << "matches for: " << plates[i].getName() << std::endl;
             for (auto match : tmp)
-                std::cout << match.first.toString() << ", located at row " << match.second.first << " column " << match.second.second << std::endl;
+                std::cout << match.first.toString() << ", located at well " << nums_to_coords(match.second.first, match.second.second) << std::endl;
             hits.push_back(std::make_pair(plates[i].getName(), tmp));
         }
     }
