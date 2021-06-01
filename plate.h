@@ -1,6 +1,7 @@
 #include<string>
 #include <vector>
 #include<tuple>
+#pragma once
 
 #ifndef WELL_H
 #define WELL_H
@@ -19,6 +20,7 @@ class Well{
         int getRow(){return row;}
         int getCol(){return col;}
         std::pair<int, int>getCoords(){return std::make_pair(row, col);}
+        std::string getStrCoords();
         void setCoords(int r, int c){row = r; col = c;}
         int changeVol(double amt);
         bool canChange(double amt);

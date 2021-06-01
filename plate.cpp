@@ -101,3 +101,7 @@ int Plate::save(){
     out.close();
     return 0;
 }
+std::string Well::getStrCoords(){
+    char tmp = 'A' + (char)col; // c is 0 indexed
+    return tmp + std::to_string(row);
+}
