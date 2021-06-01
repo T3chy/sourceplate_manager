@@ -12,6 +12,9 @@ Plate::Plate(int r, int c, double mv, std::string n){
         std::vector<Well> tmp (c, Well(mv));
         wells.push_back(tmp);
     }
+    for (int i=0; i < wells.size(); i++)
+        for (int j=0; j < wells[0].size(); j++)
+            wells[i][j].setCoords(i, j);
 }
 bool Well::canChange(double amt){
     if (amt > 0)
@@ -71,27 +74,25 @@ std::string Plate::changeWellContents(int r, int c, double vol, double conc, std
     }
     throw(compound);
 }
-std::vector<std::pair<Well, std::pair<int, int>>> Plate::compoundExists(std::string compound, double conc){
-    std::vector<std::pair<Well, std::pair<int, int>>> matches;
+std::vector<Well> Plate::compoundExists(std::string compound, double conc){
+    std::vector<Well> matches;
     for (int row=0; row < wells.size(); row++){
         for (int col=0; col < wells[0].size(); col++){
             if (conc != -1){
                 if (wells[row][col].compound == compound && wells[row][col].concentration == conc){
-                    std::pair<Well, std::pair<int,int>> tmp = {wells[row][col], {row, col}};
-                    matches.push_back(tmp);
+                    matches.push_back(wells[row][col]);
                 }
             }
             else{
                 if (wells[row][col].compound == compound){
-                    std::pair<Well, std::pair<int,int>> tmp = {wells[row][col], {row, col}};
-                    matches.push_back(tmp);
+                    matches.push_back(wells[row][col]);
                 }
             }
         }
     }
     return matches;
 }
-std::vector<std::pair<Well, std::pair<int, int>>> Plate::compoundExists(std::string compound){
+std::vector<Well> Plate::compoundExists(std::string compound){
     return compoundExists(compound, -1);
 }
 int Plate::save(){

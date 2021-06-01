@@ -5,6 +5,9 @@
 #ifndef WELL_H
 #define WELL_H
 class Well{
+    private:
+        int row;
+        int col;
     public:
         double concentration;
         double volume;
@@ -12,6 +15,11 @@ class Well{
         std::string compound;
         /* Well(double vol, std::string comp, double conc, double maxvol); */
         Well(double maxvol);
+        Well(double maxvol, int r, int c);
+        int getRow(){return row;}
+        int getCol(){return col;}
+        std::pair<int, int>getCoords(){return std::make_pair(row, col);}
+        void setCoords(int r, int c){row = r; col = c;}
         int changeVol(double amt);
         bool canChange(double amt);
         std::string toString(){return (volume == 0) ? "Empty!" : std::to_string(volume) + "uL of " + compound + " at " + std::to_string(concentration) + "uM";}
@@ -35,7 +43,7 @@ class Plate{
         Plate(int r, int c, double mv, std::string name);
         std::string changeWellContents(int r, int c, double vol);
         std::string changeWellContents(int r, int c, double vol, double conc, std::string compound);
-        std::vector<std::pair<Well, std::pair<int, int>>> compoundExists(std::string compound, double conc);
-        std::vector<std::pair<Well, std::pair<int, int>>> compoundExists(std::string compound);
+        std::vector<Well> compoundExists(std::string compound, double conc);
+        std::vector<Well> compoundExists(std::string compound);
 };
 #endif

@@ -4,18 +4,18 @@
 #include<fstream>
 #include<bits/stdc++.h>
 
-std::string nums_to_coords(int r, int c){
-    char tmp = 'A' + (char)c;
-    return tmp + std::to_string(r);
+std::string nums_to_coords(std::pair<int, int> coords){
+    char tmp = 'A' + (char)coords.second; // c is 0 indexed
+    return tmp + std::to_string(coords.first);
 }
-std::vector<std::pair<std::string, std::vector<std::pair<Well, std::pair<int, int>>>>> find(std::vector<Plate> plates, std::string name, double conc){
+std::vector<std::pair<std::string, std::vector<Well>>> find(std::vector<Plate> plates, std::string name, double conc){// maybe add a multi search function
     if (conc == -1)
         std::cout << "searching for any concentration of " << name << std::endl;
     else
         std::cout << "searching for " << name << " at a concentration of " << conc << "uM" << std::endl;
-    std::vector<std::pair<std::string, std::vector<std::pair<Well, std::pair<int, int>>>>> hits;
+    std::vector<std::pair<std::string, std::vector<Well>>> hits;
     for (int i=0; i < plates.size(); i++){
-        std::vector<std::pair<Well, std::pair<int, int>>> tmp = {};
+        std::vector<Well> tmp = {};
         if (conc != -1)
             tmp = plates[i].compoundExists(name, conc);
         else
@@ -23,13 +23,13 @@ std::vector<std::pair<std::string, std::vector<std::pair<Well, std::pair<int, in
         if (tmp.size() > 0){
             std::cout << "matches for: " << plates[i].getName() << std::endl;
             for (auto match : tmp)
-                std::cout << match.first.toString() << ", located at well " << nums_to_coords(match.second.first, match.second.second) << std::endl;
+                std::cout << match.toString() << ", located at well " << nums_to_coords(match.getCoords()) << std::endl;
             hits.push_back(std::make_pair(plates[i].getName(), tmp));
         }
     }
     return hits;
 }
-std::vector<std::pair<std::string, std::vector<std::pair<Well, std::pair<int, int>>>>> find(std::vector<Plate> plates, std::string name){
+std::vector<std::pair<std::string, std::vector<Well>>> find(std::vector<Plate> plates, std::string name){
     return find(plates, name, -1);
 }
 void serialDilution(Plate * plate, int r, int c, int n, double dilution){
@@ -102,17 +102,10 @@ int main(){
     Plate dd = Plate(12,16,20.0, "Doug's plate");
     std::vector<std::vector<Well>> tmp = pp.getWells();
     pp.changeWellContents(10,1, 10, .1, "abc");
-    serialDilution(&pp, 10, 1, 5, 2.0);
-    dd.changeWellContents(10,1, 10, .1, "abc");
-    serialDilution(&dd, 10, 1, 5, 2.0);
-    /* std::cout << pp.changeWellContents(10,15, 10, .1, "abc") << std::endl; */
-    /* std::cout << pp.getWells()[0][0].toString() << std::endl; */
+    serialDilution(&pp, 10, 1, 12, 2.0);
+    pp.save();
+    std::vector<Plate> b = {pp};
+    find(b, "abc");
 
-    Plate b = read_csv(pp.getName() + ".csv");
-    /* std::cout << b.toString() << std::endl; */
-    auto col = {b};
-    std::cout << "read plate name" << b.getName() << std::endl;
-    std::cout << b.toString() << std::endl;
-    auto a = find(col, "abc", .1);
 
 }
