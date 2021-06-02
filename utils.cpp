@@ -4,12 +4,12 @@
 #include<bits/stdc++.h>
 #include "plate.h"
 namespace utils{
-    std::vector<std::pair<std::string, std::vector<Well>>> find(std::vector<Plate> plates, std::string name, double conc){
+    std::vector<std::pair<Plate, std::vector<Well>>> find(std::vector<Plate> plates, std::string name, double conc){
         if (conc == -1)
             std::cout << "searching for any concentration of " << name << std::endl;
         else
             std::cout << "searching for " << name << " at a concentration of " << conc << "uM" << std::endl;
-        std::vector<std::pair<std::string, std::vector<Well>>> hits;
+        std::vector<std::pair<Plate, std::vector<Well>>> hits;
         for (int i=0; i < plates.size(); i++){
             std::vector<Well> tmp = {};
             if (conc != -1)
@@ -20,12 +20,12 @@ namespace utils{
                 std::cout << "matches for: " << plates[i].getName() << std::endl;
                 for (auto match : tmp)
                     std::cout << match.toString() << ", located at well " << match.getStrCoords() << std::endl;
-                hits.push_back(std::make_pair(plates[i].getName(), tmp));
+                hits.push_back(std::make_pair(plates[i], tmp));
             }
         }
         return hits;
     }
-    std::vector<std::pair<std::string, std::vector<Well>>> find(std::vector<Plate> plates, std::string name){
+    std::vector<std::pair<Plate, std::vector<Well>>> find(std::vector<Plate> plates, std::string name){
         return find(plates, name, -1);
     }
     void serialDilution(Plate * plate, int r, int c, int n, double dilution){
