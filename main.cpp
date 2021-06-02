@@ -3,7 +3,8 @@
 #include<vector>
 #include<fstream>
 #include<bits/stdc++.h>
-#include "utils.cpp"
+#include "utils.h"
+#include "sheet.h"
 
 
 int main(){
@@ -13,7 +14,7 @@ int main(){
     std::vector<std::vector<Well>> tmp = pp.getWells();
     pp.changeWellContents(10,1, 10, .1, "abc");
     utils::serialDilution(&pp, 10, 1, 12, 2.0);
-    pp.save();
+    /* pp.save(); */
     std::vector<Plate> b = {pp};
     utils::find(b, "abc");
 
