@@ -4,6 +4,24 @@
 #include<bits/stdc++.h>
 #include "plate.h"
 #include "utils.h"
+typedef struct transfer{
+    double volume;
+    std::string sourceplate;
+    std::string destplate;
+    std::string sourcewell;
+    std::string destwell;
+    transfer(std::string sp, std::string sw, std::string dp, std::string dw, double vol){
+        sourceplate = sp;
+        destplate = dp;
+        sourcewell = sw;
+        destwell = dw;
+        volume = vol;
+    }
+    std::string toString() {
+        return sourceplate + "," + sourcewell + "," + destplate + "," + destwell + "," + std::to_string(volume);
+    };
+} transfer;
+
 std::vector<std::pair<Plate, std::vector<Well>>> utils::find(std::vector<Plate> plates, std::string name, double conc){
     if (conc == -1)
         std::cout << "searching for any concentration of " << name << std::endl;
@@ -17,7 +35,7 @@ std::vector<std::pair<Plate, std::vector<Well>>> utils::find(std::vector<Plate> 
         else
             tmp = plates[i].compoundExists(name);
         if (tmp.size() > 0){
-            std::cout << "matches for: " << plates[i].getName() << std::endl;
+            std::cout << tmp.size() << " matches for: " << plates[i].getName() << std::endl;
             for (auto match : tmp)
                 std::cout << match.toString() << ", located at well " << match.getStrCoords() << std::endl;
             hits.push_back(std::make_pair(plates[i], tmp));
@@ -38,7 +56,7 @@ void utils::serialDilution(Plate * plate, int r, int c, int n, double dilution){
         plate -> changeWellContents(r, c+i, volume, conc, compound);
     }
 }
-Plate utils::read_csv(std::string filename){
+Plate utils::read_plate_csv(std::string filename){
     std::fstream fin;
     fin.open(filename, std::ios::in);
     if(!fin.is_open()) throw std::runtime_error("Could not open file");
@@ -56,20 +74,15 @@ Plate utils::read_csv(std::string filename){
                     case 0:
                         /* std::cout << s.str() << std::endl; */
                         while (s.get(c)) {
-                            std::cout << c;
                             if (c == ','){
                                 compounds.push_back(word);
                                 word = "";
-                                std::cout << std::endl;
                             } else{
                                 if (c != ' ')
                                     word += c;
                             }
                         }
                         compounds.push_back(word);
-                        for (auto s : compounds)
-                            std::cout << s << " ";
-
                         break;
                     case 1:
                         /* s.ignore(255, ','); */
@@ -112,5 +125,52 @@ Plate utils::read_csv(std::string filename){
         }
 
     return finalplate;
+
+}
+std::string utils::create_transfer_sheet(std::string filename, std::vector<Plate> plates){
+
+    std::fstream fin;
+    fin.open(filename, std::ios::in);
+    if(!fin.is_open()) throw std::runtime_error("Could not open file");
+    std::string line, word, temp;
+    std::vector<std::vector<std::pair<std::string, std::pair<double, double>>>> platevals;
+    std::string finalsheet = "compound, concentration, source plate, source well, destination plate, destination well, volume \n";
+    /* getline(fin, line); // skip label columns */
+
+    getline(fin, line);
+    while (getline(fin, line)){
+        std::stringstream s(line);
+        std::string compound, dest_plate, dest_well;
+        double conc, volume;
+        std::cout << s.str() << std::endl;
+        int idx= 0;
+        while (getline(s, word, ',')){
+            std::cout << word << std::endl;
+            switch (idx){
+                case 0:
+                    compound = word;
+                    break;
+                case 1:
+                    conc = stod(word);
+                    break;
+                case 2:
+                    dest_plate = word;
+                    break;
+                case 3:
+                    dest_well = word;
+                    break;
+                case 4:
+                    volume = stod(word);
+                    break;
+            }
+            idx++;
+        }
+        auto result = find(plates, compound, conc);
+        if (result.size() > 0)
+            finalsheet += compound + "," + std::to_string(conc) + "," + result[0].first.getName() + "," + result[0].second[0].getStrCoords() + "," + dest_plate + "," + dest_well + "," + std::to_string(volume) + "\n";
+        else
+            finalsheet+= compound + "," + std::to_string(conc) + "," + "NOT FOUND" + "," "NOT FOUND" + "," + dest_plate + "," + dest_well + "," + std::to_string(volume) + "\n";
+    }
+    return finalsheet;
 
 }
