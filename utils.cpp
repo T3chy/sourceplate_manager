@@ -171,6 +171,9 @@ std::string utils::create_transfer_sheet(std::string filename, std::vector<Plate
         else
             finalsheet+= compound + "," + std::to_string(conc) + "," + "NOT FOUND" + "," "NOT FOUND" + "," + dest_plate + "," + dest_well + "," + std::to_string(volume) + "\n";
     }
+    std::ofstream out("final_" + filename);
+    out << finalsheet;
+    out.close();
     return finalsheet;
 
 }
