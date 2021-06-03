@@ -1,4 +1,5 @@
 #include "plate.h"
+#include "utils.h"
 typedef struct transfer{
     double volume;
     std::string sourceplate;

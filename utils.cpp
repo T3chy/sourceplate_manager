@@ -50,31 +50,51 @@ Plate utils::read_csv(std::string filename){
             std::vector<std::pair<std::string, std::pair<double,double>>> thisrow;
             for (int i=0; i <3; i++){
                 getline(fin, line);
+                char c;
                 std::stringstream s(line);
-                getline(s, word, ','); // skip first column (has labels)
                 switch (i){
                     case 0:
-                        while (getline(s, word, ',')) {
-                            compounds.push_back(word);
+                        /* std::cout << s.str() << std::endl; */
+                        while (s.get(c)) {
+                            std::cout << c;
+                            if (c == ','){
+                                compounds.push_back(word);
+                                word = "";
+                                std::cout << std::endl;
+                            } else{
+                                if (c != ' ')
+                                    word += c;
+                            }
                         }
-                        getline(s, word);
                         compounds.push_back(word);
+                        for (auto s : compounds)
+                            std::cout << s << " ";
+
                         break;
                     case 1:
+                        /* s.ignore(255, ','); */
+                        /* std::cout << s.str() << std::endl; */
+                        getline(s, word, ',');
                         while (getline(s, word, ',')) {
-                            concs.push_back(stod(word));
+                            if (word != "")
+                                concs.push_back(stod(word));
                         }
                         break;
                     case 2:
+                        /* s.ignore(255, ','); */
+                        getline(s, word, ',');
                         while (getline(s, word, ',')) {
-                            vols.push_back(stod(word));
+                            if (word != "")
+                                vols.push_back(stod(word));
                         }
                         break;
                 }
 
             }
+            /* std::cout << compounds.size() << " " << concs.size() << " " << vols.size() << std::endl; */
             for(int i=0; i < compounds.size(); i++)
                 thisrow.push_back(std::make_pair(compounds[i], std::make_pair(concs[i], vols[i])));
+            std::cout << compounds.size() << std::endl;
             platevals.push_back(thisrow);
 
     }
@@ -85,8 +105,11 @@ Plate utils::read_csv(std::string filename){
     std::string platename = filename.substr(0, lastindex); // strip off .csv or whatever extension
     Plate finalplate = Plate(nrows, ncols, 20, platename);
     for(int i=0; i < platevals.size(); i++)
-        for(int j=0; j <platevals[0].size(); j++)
+        for(int j=0; j <platevals[0].size(); j++){
+            /* std::cout << platevals[i][j].second.second << platevals[i][j].second.first << platevals[i][j].first << std::endl; */
+
             finalplate.changeWellContents(i,j, platevals[i][j].second.second, platevals[i][j].second.first, platevals[i][j].first);
+        }
 
     return finalplate;
 

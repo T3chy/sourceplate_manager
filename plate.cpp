@@ -50,7 +50,8 @@ std::string Plate::toString (){
             concs += std::to_string(wells[i][j].concentration) + ",";
             vols += std::to_string(wells[i][j].volume) + ",";
         }
-        tmp += "compound, " + names + "\n" + "concentration (uM), " + concs + "\n" + "volume (uL), " + vols + "\n";
+        /* tmp += "compound, " + names + "\n" + "concentration (uM), " + concs + "\n" + "volume (uL), " + vols + "\n"; */
+        tmp += names + "\n"  + concs + "\n"  + vols + "\n";
 
     }
     return tmp;
