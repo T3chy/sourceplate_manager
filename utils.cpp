@@ -107,13 +107,12 @@ Plate utils::read_plate_csv(std::string filename){
             /* std::cout << compounds.size() << " " << concs.size() << " " << vols.size() << std::endl; */
             for(int i=0; i < compounds.size(); i++)
                 thisrow.push_back(std::make_pair(compounds[i], std::make_pair(concs[i], vols[i])));
-            std::cout << compounds.size() << std::endl;
             platevals.push_back(thisrow);
 
     }
     int nrows = platevals.size();
     int ncols = platevals[0].size();
-    std::cout << "nrows:" << platevals.size() << " ncols:" << platevals[0].size() << std::endl;
+    /* std::cout << "nrows:" << platevals.size() << " ncols:" << platevals[0].size() << std::endl; */
     size_t lastindex = filename.find_last_of(".");
     std::string platename = filename.substr(0, lastindex); // strip off .csv or whatever extension
     Plate finalplate = Plate(nrows, ncols, 20, platename);
@@ -142,10 +141,8 @@ std::string utils::create_transfer_sheet(std::string filename, std::vector<Plate
         std::stringstream s(line);
         std::string compound, dest_plate, dest_well;
         double conc, volume;
-        std::cout << s.str() << std::endl;
         int idx= 0;
         while (getline(s, word, ',')){
-            std::cout << word << std::endl;
             switch (idx){
                 case 0:
                     compound = word;
