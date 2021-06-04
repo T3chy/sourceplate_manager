@@ -33,9 +33,10 @@ class Well{
 class Plate{
     private:
         double maxvol;
-        int timesopened;
         std::string name;
         std::vector<std::vector<Well>> wells;
+        int timesopened;
+        bool opened_this_session;
     public:
         std::vector<std::vector<Well>> getWells() {return wells;}
         std::string getName() {return name;}
@@ -45,6 +46,7 @@ class Plate{
         Plate(int r, int c, double mv, std::string name);
         std::string changeWellContents(int r, int c, double vol);
         std::string changeWellContents(int r, int c, double vol, double conc, std::string compound);
+        std::vector<Well> compoundExists(std::string compound, double conc, double vol);
         std::vector<Well> compoundExists(std::string compound, double conc);
         std::vector<Well> compoundExists(std::string compound);
 };

@@ -22,7 +22,7 @@ typedef struct transfer{
     };
 } transfer;
 
-std::vector<std::pair<Plate, std::vector<Well>>> utils::find(std::vector<Plate> plates, std::string name, double conc){
+std::vector<std::pair<Plate, std::vector<Well>>> utils::find(std::vector<Plate> plates, std::string name, double conc, double vol){
     if (conc == -1)
         std::cout << "searching for any concentration of " << name << std::endl;
     else
@@ -31,9 +31,9 @@ std::vector<std::pair<Plate, std::vector<Well>>> utils::find(std::vector<Plate> 
     for (int i=0; i < plates.size(); i++){
         std::vector<Well> tmp = {};
         if (conc != -1)
-            tmp = plates[i].compoundExists(name, conc);
+            tmp = plates[i].compoundExists(name, conc, vol);
         else
-            tmp = plates[i].compoundExists(name);
+            tmp = plates[i].compoundExists(name, vol);
         if (tmp.size() > 0){
             std::cout << tmp.size() << " matches for: " << plates[i].getName() << std::endl;
             for (auto match : tmp)
@@ -43,8 +43,8 @@ std::vector<std::pair<Plate, std::vector<Well>>> utils::find(std::vector<Plate> 
     }
     return hits;
 }
-std::vector<std::pair<Plate, std::vector<Well>>> utils::find(std::vector<Plate> plates, std::string name){
-    return utils::find(plates, name, -1);
+std::vector<std::pair<Plate, std::vector<Well>>> utils::find(std::vector<Plate> plates, std::string name, double vol){
+    return utils::find(plates, name, -1, vol);
 }
 void utils::serialDilution(Plate * plate, int r, int c, int n, double dilution){
     auto tmp = plate -> getWells();
@@ -126,8 +126,8 @@ Plate utils::read_plate_csv(std::string filename){
     return finalplate;
 
 }
-std::string utils::create_transfer_sheet(std::string filename, std::vector<Plate> plates){
 
+std::string utils::create_transfer_sheet(std::string filename, std::vector<Plate> &plates, bool mutate){
     std::fstream fin;
     fin.open(filename, std::ios::in);
     if(!fin.is_open()) throw std::runtime_error("Could not open file");
@@ -162,9 +162,20 @@ std::string utils::create_transfer_sheet(std::string filename, std::vector<Plate
             }
             idx++;
         }
-        auto result = find(plates, compound, conc);
-        if (result.size() > 0)
-            finalsheet += compound + "," + std::to_string(conc) + "," + result[0].first.getName() + "," + result[0].second[0].getStrCoords() + "," + dest_plate + "," + dest_well + "," + std::to_string(volume) + "\n";
+        auto result = find(plates, compound, conc, volume);
+/* std::vector<std::pair<Plate, std::vector<Well>>> utils::find(std::vector<Plate> plates, std::string name, double conc){ */
+        if (result.size() > 0){
+            int idx = 0;
+            finalsheet += compound + "," + std::to_string(conc) + "," + result[idx].first.getName() + "," + result[idx].second[idx].getStrCoords() + "," + dest_plate + "," + dest_well + "," + std::to_string(volume) + "\n";
+            if (mutate)
+                for (Plate p : plates)
+                    if (p.getName() == result[idx].first.getName()) // god this is so bad but it'll probably work
+                        for (int i=0; i < p.getWells().size(); i++)
+                            for (int j=0; j < p.getWells()[0].size(); j++)
+                                if (p.getWells()[i][j].getStrCoords() == result[idx].second[idx].getStrCoords()){
+                                    p.changeWellContents(i,j, -1.0* volume);
+                                }
+        }
         else
             finalsheet+= compound + "," + std::to_string(conc) + "," + "NOT FOUND" + "," "NOT FOUND" + "," + dest_plate + "," + dest_well + "," + std::to_string(volume) + "\n";
     }

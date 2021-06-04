@@ -7,7 +7,7 @@
 Plate::Plate(int r, int c, double mv, std::string n){
     maxvol = mv;
     name = n;
-    timesopened = 0;
+
     for (int i=0; i < r; i++){
         std::vector<Well> tmp (c, Well(mv));
         wells.push_back(tmp);
@@ -75,23 +75,26 @@ std::string Plate::changeWellContents(int r, int c, double vol, double conc, std
     }
     throw(compound);
 }
-std::vector<Well> Plate::compoundExists(std::string compound, double conc){
+std::vector<Well> Plate::compoundExists(std::string compound, double conc, double vol){
     std::vector<Well> matches;
     for (int row=0; row < wells.size(); row++){
         for (int col=0; col < wells[0].size(); col++){
             if (conc != -1){
-                if (wells[row][col].compound == compound && wells[row][col].concentration == conc){
+                if (wells[row][col].compound == compound && wells[row][col].concentration == conc && wells[row][col].canChange(vol)){
                     matches.push_back(wells[row][col]);
                 }
             }
             else{
-                if (wells[row][col].compound == compound){
+                if (wells[row][col].compound == compound && wells[row][col].canChange(vol)){
                     matches.push_back(wells[row][col]);
                 }
             }
         }
     }
     return matches;
+}
+std::vector<Well> Plate::compoundExists(std::string compound, double conc){
+    return compoundExists(compound, conc, 0.0);
 }
 std::vector<Well> Plate::compoundExists(std::string compound){
     return compoundExists(compound, -1);
