@@ -17,4 +17,4 @@ utils.o: src/utils.h src/plate.h
 
 .PHONY: clean
 clean:
-	@rm -f *.o
+	@rm -f src/*.o
