@@ -1,6 +1,5 @@
 #include<string>
 #include <vector>
-#include<tuple>
 #pragma once
 
 #ifndef WELL_H

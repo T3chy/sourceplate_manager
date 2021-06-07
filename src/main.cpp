@@ -2,7 +2,6 @@
 #include<iostream>
 #include<vector>
 #include<fstream>
-#include<bits/stdc++.h>
 #include "utils.h"
 #include <dirent.h>
 #include <stdio.h>

@@ -1,7 +1,6 @@
 #include<iostream>
 #include<vector>
 #include<fstream>
-#include<bits/stdc++.h>
 #include "plate.h"
 namespace utils{
     std::vector<std::pair<Plate, std::vector<Well>>> find(std::vector<Plate> plates, std::string name, double conc, double vol);
