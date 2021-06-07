@@ -1,6 +1,0 @@
-classes:
-    plate well[][], owner, date
-    well, compound, concentration, volume
-    transfer sheet
-maybe some web interface, check for location of compound
-make transfer sheet given compound and concentration
